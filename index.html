@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CenitWeb | Demo Restaurante Interactivo</title>
+    <style>
+        :root {
+            --verde-cenit: #1b4d3e;
+            --verde-claro: #2ecc71;
+            --dorado: #d4af37;
+            --blanco: #ffffff;
+            --gris: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background-color: var(--gris);
+            color: #333;
+        }
+
+        /* --- CABECERA PRINCIPAL --- */
+        .hero-header {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-header h1 { font-size: 3.5rem; margin-bottom: 10px; }
+
+        .search-wrapper {
+            max-width: 600px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        #menuSearch {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: none;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            outline: none;
+        }
+
+        /* --- CONTENEDOR DE PLATILLOS --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        .section-title { 
+            border-left: 5px solid var(--verde-claro); 
+            padding-left: 15px; 
+            margin: 40px 0 20px;
+            color: var(--verde-cenit);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* --- TARJETAS --- */
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: 0.3s;
+            display: block;
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+
+        .card-content { padding: 15px; }
+        .card-content h3 { margin: 0; font-size: 1.2rem; color: var(--verde-cenit); }
+        .card-content .price { color: var(--dorado); font-weight: bold; font-size: 1.1rem; }
+
+        /* --- MODAL (VENTANA DE DETALLES) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            text-align: center;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-img { width: 100%; height: 250px; border-radius: 15px; object-fit: cover; margin-bottom: 15px; }
+
+        /* --- FOOTER --- */
+        footer { background: var(--verde-cenit); color: white; padding: 40px 20px; text-align: center; margin-top: 50px; }
+        .footer-info { margin-bottom: 20px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <section class="hero-header">
+        <h1>Cenit Gourmet</h1>
+        <div class="search-wrapper">
+            <input type="text" id="menuSearch" placeholder="Busca tu platillo favorito o ingredientes..." onkeyup="filterMenu()">
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Los más populares de Puebla</h2>
+        <div id="popularGrid" class="grid"></div>
+
+        <h2 class="section-title">Menú Completo</h2>
+        <div id="fullMenuGrid" class="grid"></div>
+    </div>
+
+    <div id="itemModal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal()">×</span>
+            <img id="modalImg" class="modal-img" src="" alt="">
+            <h2 id="modalTitle" style="color: var(--verde-cenit);"></h2>
+            <p id="modalIngredients" style="color: #666; font-style: italic;"></p>
+            <h3 id="modalPrice" style="color: var(--dorado);"></h3>
+            <button onclick="closeModal()" style="background: var(--verde-cenit); color: white; border: none; padding: 10px 30px; border-radius: 20px; cursor: pointer;">Cerrar</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-info">
+            <p>📍 Av. Juárez 1234, La Paz, Puebla, Pue.</p>
+            <p>📧 contacto@cenitgourmet.com | 📞 222 123 4567</p>
+            <div style="font-size: 24px; margin-top: 10px;">📸 🔵</div>
+        </div>
+        <p style="opacity: 0.6; font-size: 12px;">&copy; 2026 Diseñado por Cenit Digital Studio</p>
+    </footer>
+
+    <script>
+        // BASE DE DATOS DE PLATILLOS (15 ÍTEMS)
+        const menuData = [
+            { id: 1, popular: true, nombre: "Chiles en Nogada", precio: "$280", ingredientes: "Chile poblano, nuez de castilla, granada, carne molida, frutas.", img: "https://images.unsplash.com/photo-1625937286071-66375b0ad9a8?auto=format&fit=crop&w=500&q=80" },
+            { id: 2, popular: true, nombre: "Tacos Árabes", precio: "$120", ingredientes: "Carne de cerdo marinada, pan árabe, salsa de chipotle.", img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=500&q=80" },
+            { id: 3, popular: true, nombre: "Mole Poblano", precio: "$250", ingredientes: "Pollo, chocolate, chiles secos, ajonjolí, especias secretas.", img: "https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?auto=format&fit=crop&w=500&q=80" },
+            { id: 4, popular: false, nombre: "Pizza Masa Madre", precio: "$195", ingredientes: "Harina orgánica, tomate san marzano, albahaca fresca.", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80" },
+            { id: 5, popular: false, nombre: "Hamburguesa Trufa", precio: "$210", ingredientes: "Carne wagyu, aceite de trufa, queso provolone, pan brioche.", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80" },
+            { id: 6, popular: false, nombre: "Pasta Carbonara", precio: "$175", ingredientes: "Spaghetti, guanciale, huevo, queso pecorino romano.", img: "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=500&q=80" },
+            { id: 7, popular: false, nombre: "Ensalada César", precio: "$140", ingredientes: "Lechuga romana, crotones, anchoas, aderezo artesanal.", img: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=500&q=80" },
+            { id: 8, popular: false, nombre: "Sushi Roll Especial", precio: "$185", ingredientes: "Salmón fresco, aguacate, queso crema, topping de anguila.", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=500&q=80" },
+            { id: 9, popular: false, nombre: "Corte New York", precio: "$450", ingredientes: "400g de carne de res, puré de papa, espárragos al grill.", img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=500&q=80" },
+            { id: 10, popular: false, nombre: "Ceviche de Mar", precio: "$190", ingredientes: "Pescado blanco, limón, cebolla morada, cilantro y habanero.", img: "https://images.unsplash.com/photo-1534080564607-c9275445f29c?auto=format&fit=crop&w=500&q=80" },
+            { id: 11, popular: false, nombre: "Limonada de Fresa", precio: "$55", ingredientes: "Fresa natural, limón real, menta y agua mineral.", img: "https://images.unsplash.com/photo-1497515114629-f71d768fd07c?auto=format&fit=crop&w=500&q=80" },
+            { id: 12, popular: false, nombre: "Clericot Tinto", precio: "$85", ingredientes: "Vino tinto de la casa, manzana, pera, melón y cítricos.", img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=500&q=80" },
+            { id: 13, popular: false, nombre: "Tacos de Rib-eye", precio: "$160", ingredientes: "Tortilla de harina, rib-eye premium, costra de queso.", img: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=500&q=80" },
+            { id: 14, popular: false, nombre: "Cheesecake de Frutos", precio: "$95", ingredientes: "Base de galleta, queso crema sedoso, salsa de moras.", img: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=500&q=80" },
+            { id: 15, popular: false, nombre: "Volcán de Chocolate", precio: "$110", ingredientes: "Chocolate amargo 70%, centro líquido, helado de vainilla.", img: "https://images.unsplash.com/photo-1624353335566-3d73bc294657?auto=format&fit=crop&w=500&q=80" }
+        ];
+
+        // Función para renderizar el menú
+        function renderMenu(data) {
+            const popularGrid = document.getElementById('popularGrid');
+            const fullGrid = document.getElementById('fullMenuGrid');
+            popularGrid.innerHTML = '';
+            fullGrid.innerHTML = '';
+
+            data.forEach(item => {
+                const card = `
+                    <div class="card" onclick="openModal(${item.id})">
+                        <img src="${item.img}" alt="${item.nombre}">
+                        <div class="card-content">
+                            <h3>${item.nombre}</h3>
+                            <p class="price">${item.precio}</p>
+                        </div>
+                    </div>
+                `;
+                if(item.popular) popularGrid.innerHTML += card;
+                else fullGrid.innerHTML += card;
+            });
+        }
+
+        // Buscador funcional
+        function filterMenu() {
+            const text = document.getElementById('menuSearch').value.toLowerCase();
+            const filtered = menuData.filter(item => 
+                item.nombre.toLowerCase().includes(text) || 
+                item.ingredientes.toLowerCase().includes(text)
+            );
+            renderMenu(filtered);
+        }
+
+        // Manejo de Modal
+        function openModal(id) {
+            const item = menuData.find(i => i.id === id);
+            document.getElementById('modalTitle').innerText = item.nombre;
+            document.getElementById('modalImg').src = item.img;
+            document.getElementById('modalIngredients').innerText = "Ingredientes: " + item.ingredientes;
+            document.getElementById('modalPrice').innerText = item.precio;
+            document.getElementById('itemModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('itemModal').style.display = 'none';
+        }
+
+        // Inicializar
+        renderMenu(menuData);
+    </script>
+</body>
+</html>
