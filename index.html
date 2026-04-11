@@ -1,231 +1,470 @@
-<!DOCTYPE html>
+[11/4 14:55] .: <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CenitWeb | Demo Restaurante Interactivo</title>
+    <title>Cenit.Web | Impulsamos tu negocio</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%231b4d3e' stroke='white' stroke-width='5'/></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --verde-esmeralda-claro: #58ff9d; /* Verde esmeralda más vibrante y claro */
+            --verde-esmeralda: #2ecc71;
+            --verde-oscuro: #0a1f19;
+            --blanco: #ffffff;
+            --gris-fondo: #f4f7f6;
+            --degradado-tech: linear-gradient(135deg, #0a1f19 0%, #1b4d3e 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body { background-color: var(--blanco); color: #333; line-height: 1.6; }
+
+        /* --- HERO TECNOLÓGICO --- */
+        .hero {
+            background: var(--degradado-tech);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            padding: 100px 15px;
+            text-align: center;
+        }
+
+        /* Rejilla tecnológica */
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(var(--verde-esmeralda-claro) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+            opacity: 0.2;
+            z-index: 1;
+        }
+
+        .hero-content { position: relative; z-index: 2; }
+
+        /* Barra de búsqueda con resplandor claro */
+        .search-brand-container {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(88, 255, 157, 0.3);
+            padding: 12px 30px;
+            border-radius: 100px;
+            box-shadow: 0 0 25px rgba(88, 255, 157, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .search-icon {
+            color: var(--verde-esmeralda-claro);
+            font-size: 1.3rem;
+            margin-right: 15px;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            letter-spacing: -1px;
+            margin: 0;
+            color: white;
+        }
+
+        /* Ajuste de eslogan para móvil */
+        .hero p {
+            font-size: 0.95rem; /* Letras un poco más pequeñas */
+            opacity: 0.9;
+            margin-top: 12px;
+            white-space: nowrap; /* Fuerza un solo renglón */
+        }
+
+        /* --- CONTENEDOR GENERAL --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 50px 20px; }
+        h2 { text-align: center; color: var(--verde-oscuro); margin-bottom: 40px; font-size: 1.8rem; }
+
+        /* --- SERVICIOS --- */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card {
+            background: var(--blanco);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(46, 204, 113, 0.2); }
+        .card i { font-size: 2.5rem; color: var(--verde-esmeralda); margin-bottom: 15px; }
+
+        /* --- PROCESO --- */
+        .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 50px; }
+        .process-step { text-align: center; }
+        .process-step .icon-circle {
+            width: 70px; height: 70px; background: var(--blanco); border: 2px solid var(--verde-esmeralda);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 15px; font-size: 1.8rem; color: var(--verde-esmeralda);
+        }
+
+        /* --- SOBRE NOSOTROS --- */
+        .about-section { background-color: var(--gris-fondo); border-radius: 20px; padding: 40px 20px; text-align: center; margin: 40px 0; }
+        .about-section p { max-width: 800px; margin: 0 auto; font-size: 1rem; }
+
+        /* --- WHATSAPP --- */
+        .cta-section { text-align: center; padding: 60px 20px; }
+        .btn-whatsapp {
+            display: inline-flex; align-items: center; background-color: #25d366; color: white;
+            padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: bold;
+            font-size: 1.1rem; transition: 0.3s;
+        }
+        .btn-whatsapp:hover { transform: scale(1.05); }
+        .btn-whatsapp i { margin-right: 8px; font-size: 1.3rem; }
+
+        /* --- FOOTER --- */
+        footer { background-color: var(--verde-oscuro); color: white; padding: 50px 20px 20px; text-align: center; }
+        .insta-link {
+            display: inline-flex; align-items: center; color: white; text-decoration: none;
+            background: rgba(255,255,255,0.05); padding: 8px 18px; border-radius: 10px; font-size: 0.9rem;
+        }
+        .insta-icon {
+            width: 25px; height: 25px; background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+            border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-right: 8px;
+        }
+        /* Copyright en una sola línea para móvil */
+        .copyright { 
+            border-top: 1px solid rgba(255,255,255,0.1); 
+            margin-top: 30px; 
+            padding-top: 20px; 
+            font-size: 0.75rem; 
+            opacity: 0.6; 
+            white-space: nowrap; 
+        }
+
+        /* Ajustes específicos para pantallas muy pequeñas */
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 2.2rem; }
+            .search-brand-container { padding: 10px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="search-brand-container">
+                <i class="fas fa-search search-icon"></i>
+                <h1>Cenit.Web</h1>
+            </div>
+            <p>Impulsamos tu negocio al siguiente nivel digital</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Nuestros Servicios</h2>
+        <div class="services-grid">
+            <div class="card">
+                <i class="fas fa-laptop-code"></i>
+                <h3>Páginas Web</h3>
+                <p>Sitios rápidos y optimizados para vender.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-qrcode"></i>
+                <h3>Códigos QR</h3>
+                <p>Menús y tarjetas digitales inteligentes.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Soporte</h3>
+                <p>Seguridad para que tu sitio nunca falle.</p>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 50px;">¿Cómo trabajamos?</h2>
+        <div class="process-grid">
+            <div class="process-step">
+                <div class="icon-circle"><i class="fas fa-comments"></i></div>
+                <h3>1. Charla</h3>
+                <p>Definimos tus objetivos iniciales.</p>
+            </div>
+            <div class="process-step">
+                <div class="icon-circle"><i class="fas fa-pencil-ruler"></i></div>
+                <h3>2. Desarrollo</h3>
+                <p>Construimos con tecnología de punta.</p>
+            </div>
+            <div class="process-step">
+                <div class="icon-circle"><i class="fas fa-rocket"></i></div>
+                <h3>3. Entrega</h3>
+                <p>Lanzamos tu sitio y accesos QR.</p>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2>Sobre Cenit.Web</h2>
+            <p>Ubicados en <strong>Puebla, México</strong>, apasionados por crear presencia profesional en internet para emprendedores.</p>
+        </div>
+
+        <div class="cta-section">
+            <h2>¿Listo para empezar?</h2>
+            <a href="https://wa.me/522225673684?text=Hola!%20Me%20interesa%20una%20cotización" class="btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Iniciar Cotización
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-social">
+            <a href="https://www.instagram.com/cenit_web/" target="_blank" class="insta-link">
+                <div class="insta-icon"><i class="fab fa-instagram"></i></div>
+                @cenit_web
+            </a>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Cenit.Web | Todos los derechos reservados.
+        </div>
+    </footer>
+
+</body>
+</html>
+[11/4 15:15] .: <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cenit Gourmet | Sabores de Puebla</title>
     <style>
         :root {
             --verde-cenit: #1b4d3e;
             --verde-claro: #2ecc71;
-            --dorado: #d4af37;
             --blanco: #ffffff;
-            --gris: #f4f4f4;
+            --gris-fondo: #f4f7f6;
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0;
-            background-color: var(--gris);
+            background-color: var(--gris-fondo);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--verde-cenit);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .brand-name {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .search-wrapper {
+            background: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .search-wrapper input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1rem;
             color: #333;
         }
 
-        /* --- CABECERA PRINCIPAL --- */
-        .hero-header {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 80px 20px;
+        main {
+            flex: 1;
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
             text-align: center;
-            color: white;
         }
 
-        .hero-header h1 { font-size: 3.5rem; margin-bottom: 10px; }
-
-        .search-wrapper {
-            max-width: 600px;
-            margin: 20px auto;
-            position: relative;
-        }
-
-        #menuSearch {
-            width: 100%;
-            padding: 15px 25px;
-            border-radius: 30px;
-            border: none;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            outline: none;
-        }
-
-        /* --- CONTENEDOR DE PLATILLOS --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-
-        .section-title { 
-            border-left: 5px solid var(--verde-claro); 
-            padding-left: 15px; 
-            margin: 40px 0 20px;
-            color: var(--verde-cenit);
-        }
-
-        .grid {
+        .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
+            margin-top: 30px;
         }
 
-        /* --- TARJETAS --- */
         .card {
             background: white;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            cursor: pointer;
             transition: 0.3s;
+            text-align: left; /* Alineamos el texto a la izquierda para la lista */
+        }
+
+        .card:hover { transform: translateY(-5px); }
+        
+        .card img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            background-color: #eee;
+        }
+        
+        .card-body { padding: 20px; }
+
+        .card-body h3 { margin-top: 0; color: var(--verde-cenit); }
+
+        .precio {
+            color: var(--verde-claro);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
             display: block;
         }
 
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-
-        .card img { width: 100%; height: 180px; object-fit: cover; }
-
-        .card-content { padding: 15px; }
-        .card-content h3 { margin: 0; font-size: 1.2rem; color: var(--verde-cenit); }
-        .card-content .price { color: var(--dorado); font-weight: bold; font-size: 1.1rem; }
-
-        /* --- MODAL (VENTANA DE DETALLES) --- */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+        /* --- ESTILO DE LA LISTA DE INGREDIENTES --- */
+        .ingredientes-titulo {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+            text-transform: uppercase;
         }
 
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 100%;
-            position: relative;
-            text-align: center;
+        .lista-ingredientes {
+            list-style-type: disc; /* Viñetas redondas */
+            padding-left: 20px;    /* Espacio para las viñetas */
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;      /* Espacio entre filas */
         }
 
-        .close-modal {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #999;
+        footer {
+            background-color: white;
+            color: var(--verde-cenit);
+            padding: 50px 20px 20px;
+            border-top: 1px solid #ddd;
+            margin-top: 50px;
         }
 
-        .modal-img { width: 100%; height: 250px; border-radius: 15px; object-fit: cover; margin-bottom: 15px; }
+        .footer-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
 
-        /* --- FOOTER --- */
-        footer { background: var(--verde-cenit); color: white; padding: 40px 20px; text-align: center; margin-top: 50px; }
-        .footer-info { margin-bottom: 20px; line-height: 1.6; }
+        .footer-section { flex: 1; min-width: 250px; margin-bottom: 20px; }
+        .footer-section h4 { color: var(--verde-claro); margin-bottom: 15px; }
+
+        .insta-icon {
+            width: 30px; height: 30px; margin-right: 10px;
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+            border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .insta-icon svg { fill: white; width: 18px; }
+
+        .bottom-bar {
+            text-align: center; margin-top: 40px; padding-top: 20px;
+            border-top: 1px solid #eee; font-size: 0.8rem; color: #999;
+        }
     </style>
 </head>
 <body>
 
-    <section class="hero-header">
-        <h1>Cenit Gourmet</h1>
-        <div class="search-wrapper">
-            <input type="text" id="menuSearch" placeholder="Busca tu platillo favorito o ingredientes..." onkeyup="filterMenu()">
+    <header>
+        <div class="header-container">
+            <span class="brand-name">Cenit Gourmet</span>
+            <div class="search-wrapper">
+                <input type="text" placeholder="Busca platillos o ingredientes...">
+            </div>
         </div>
-    </section>
+    </header>
 
-    <div class="container">
-        <h2 class="section-title">Los más populares de Puebla</h2>
-        <div id="popularGrid" class="grid"></div>
+    <main>
+        <h2>Especialidades de la Casa</h2>
+        <div class="menu-grid">
+            
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&auto=format&fit=crop" alt="Ensalada">
+                <div class="card-body">
+                    <h3>Ensalada Fresh</h3>
+                    <span class="precio">$145</span>
+                    <p class="ingredientes-titulo">Ingredientes:</p>
+                    <ul class="lista-ingredientes">
+                        <li>Lechuga orgánica</li>
+                        <li>Tomates cherry</li>
+                        <li>Queso feta</li>
+                        <li>Vinagreta de la casa</li>
+                    </ul>
+                </div>
+            </div>
 
-        <h2 class="section-title">Menú Completo</h2>
-        <div id="fullMenuGrid" class="grid"></div>
-    </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600&auto=format&fit=crop" alt="Pizza">
+                <div class="card-body">
+                    <h3>Pizza Artesanal</h3>
+                    <span class="precio">$190</span>
+                    <p class="ingredientes-titulo">Ingredientes:</p>
+                    <ul class="lista-ingredientes">
+                        <li>Masa de masa madre</li>
+                        <li>Salsa de tomate natural</li>
+                        <li>Queso mozzarella</li>
+                        <li>Albahaca fresca</li>
+                    </ul>
+                </div>
+            </div>
 
-    <div id="itemModal" class="modal" onclick="closeModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeModal()">×</span>
-            <img id="modalImg" class="modal-img" src="" alt="">
-            <h2 id="modalTitle" style="color: var(--verde-cenit);"></h2>
-            <p id="modalIngredients" style="color: #666; font-style: italic;"></p>
-            <h3 id="modalPrice" style="color: var(--dorado);"></h3>
-            <button onclick="closeModal()" style="background: var(--verde-cenit); color: white; border: none; padding: 10px 30px; border-radius: 20px; cursor: pointer;">Cerrar</button>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1594041680534-e8c8cdebd659?q=80&w=600&auto=format&fit=crop" alt="Corte">
+                <div class="card-body">
+                    <h3>Corte Premium</h3>
+                    <span class="precio">$350</span>
+                    <p class="ingredientes-titulo">Ingredientes:</p>
+                    <ul class="lista-ingredientes">
+                        <li>Rib Eye 400g</li>
+                        <li>Sal de grano</li>
+                        <li>Mantequilla de ajo</li>
+                        <li>Romero fresco</li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
-    </div>
+    </main>
 
     <footer>
-        <div class="footer-info">
-            <p>📍 Av. Juárez 1234, La Paz, Puebla, Pue.</p>
-            <p>📧 contacto@cenitgourmet.com | 📞 222 123 4567</p>
-            <div style="font-size: 24px; margin-top: 10px;">📸 🔵</div>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Ubicación</h4>
+                <p>📍 Av. Juárez 1234, Col. La Paz, Puebla</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>📞 222 123 4567</p>
+                <p>📧 contacto@cenitgourmet.com</p>
+            </div>
+            <div class="footer-section">
+                <h4>Síguenos</h4>
+                <a href="https://www.instagram.com/cenit_web/" target="_blank" style="text-decoration:none; color:inherit; font-weight:bold;">
+                    <div class="insta-icon">
+                        <svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.9c-41.4 0-75-33.6-75-75s33.6-75 75-75 75 33.6 75 75-33.6 75-75 75zm144.2-211.7c-21.6 0-39.1 17.5-39.1 39.1s17.5 39.1 39.1 39.1 39.1-17.5 39.1-39.1c0-21.6-17.5-39.1-39.1-39.1zM448 96v320c0 17.6-14.4 32-32 32H96c-17.6 0-32-14.4-32-32V96c0-17.6 14.4-32 32-32h320c17.6 0 32 14.4 32 32zm-32 320c0 30.6-25.4 56-56 56H152c-30.6 0-56-25.4-56-56V152c0-30.6 25.4-56 56-56h208c30.6 0 56 25.4 56 56v208z"/></svg>
+                    </div>
+                    @cenitweb
+                </a>
+            </div>
         </div>
-        <p style="opacity: 0.6; font-size: 12px;">&copy; 2026 Diseñado por Cenit Digital Studio</p>
+        <div class="bottom-bar">
+            &copy; 2026 Cenit Digital Studio | Demo para Clientes
+        </div>
     </footer>
 
-    <script>
-        // BASE DE DATOS DE PLATILLOS (15 ÍTEMS)
-        const menuData = [
-            { id: 1, popular: true, nombre: "Chiles en Nogada", precio: "$280", ingredientes: "Chile poblano, nuez de castilla, granada, carne molida, frutas.", img: "https://images.unsplash.com/photo-1625937286071-66375b0ad9a8?auto=format&fit=crop&w=500&q=80" },
-            { id: 2, popular: true, nombre: "Tacos Árabes", precio: "$120", ingredientes: "Carne de cerdo marinada, pan árabe, salsa de chipotle.", img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=500&q=80" },
-            { id: 3, popular: true, nombre: "Mole Poblano", precio: "$250", ingredientes: "Pollo, chocolate, chiles secos, ajonjolí, especias secretas.", img: "https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?auto=format&fit=crop&w=500&q=80" },
-            { id: 4, popular: false, nombre: "Pizza Masa Madre", precio: "$195", ingredientes: "Harina orgánica, tomate san marzano, albahaca fresca.", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80" },
-            { id: 5, popular: false, nombre: "Hamburguesa Trufa", precio: "$210", ingredientes: "Carne wagyu, aceite de trufa, queso provolone, pan brioche.", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80" },
-            { id: 6, popular: false, nombre: "Pasta Carbonara", precio: "$175", ingredientes: "Spaghetti, guanciale, huevo, queso pecorino romano.", img: "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=500&q=80" },
-            { id: 7, popular: false, nombre: "Ensalada César", precio: "$140", ingredientes: "Lechuga romana, crotones, anchoas, aderezo artesanal.", img: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=500&q=80" },
-            { id: 8, popular: false, nombre: "Sushi Roll Especial", precio: "$185", ingredientes: "Salmón fresco, aguacate, queso crema, topping de anguila.", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=500&q=80" },
-            { id: 9, popular: false, nombre: "Corte New York", precio: "$450", ingredientes: "400g de carne de res, puré de papa, espárragos al grill.", img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=500&q=80" },
-            { id: 10, popular: false, nombre: "Ceviche de Mar", precio: "$190", ingredientes: "Pescado blanco, limón, cebolla morada, cilantro y habanero.", img: "https://images.unsplash.com/photo-1534080564607-c9275445f29c?auto=format&fit=crop&w=500&q=80" },
-            { id: 11, popular: false, nombre: "Limonada de Fresa", precio: "$55", ingredientes: "Fresa natural, limón real, menta y agua mineral.", img: "https://images.unsplash.com/photo-1497515114629-f71d768fd07c?auto=format&fit=crop&w=500&q=80" },
-            { id: 12, popular: false, nombre: "Clericot Tinto", precio: "$85", ingredientes: "Vino tinto de la casa, manzana, pera, melón y cítricos.", img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=500&q=80" },
-            { id: 13, popular: false, nombre: "Tacos de Rib-eye", precio: "$160", ingredientes: "Tortilla de harina, rib-eye premium, costra de queso.", img: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=500&q=80" },
-            { id: 14, popular: false, nombre: "Cheesecake de Frutos", precio: "$95", ingredientes: "Base de galleta, queso crema sedoso, salsa de moras.", img: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=500&q=80" },
-            { id: 15, popular: false, nombre: "Volcán de Chocolate", precio: "$110", ingredientes: "Chocolate amargo 70%, centro líquido, helado de vainilla.", img: "https://images.unsplash.com/photo-1624353335566-3d73bc294657?auto=format&fit=crop&w=500&q=80" }
-        ];
-
-        // Función para renderizar el menú
-        function renderMenu(data) {
-            const popularGrid = document.getElementById('popularGrid');
-            const fullGrid = document.getElementById('fullMenuGrid');
-            popularGrid.innerHTML = '';
-            fullGrid.innerHTML = '';
-
-            data.forEach(item => {
-                const card = `
-                    <div class="card" onclick="openModal(${item.id})">
-                        <img src="${item.img}" alt="${item.nombre}">
-                        <div class="card-content">
-                            <h3>${item.nombre}</h3>
-                            <p class="price">${item.precio}</p>
-                        </div>
-                    </div>
-                `;
-                if(item.popular) popularGrid.innerHTML += card;
-                else fullGrid.innerHTML += card;
-            });
-        }
-
-        // Buscador funcional
-        function filterMenu() {
-            const text = document.getElementById('menuSearch').value.toLowerCase();
-            const filtered = menuData.filter(item => 
-                item.nombre.toLowerCase().includes(text) || 
-                item.ingredientes.toLowerCase().includes(text)
-            );
-            renderMenu(filtered);
-        }
-
-        // Manejo de Modal
-        function openModal(id) {
-            const item = menuData.find(i => i.id === id);
-            document.getElementById('modalTitle').innerText = item.nombre;
-            document.getElementById('modalImg').src = item.img;
-            document.getElementById('modalIngredients').innerText = "Ingredientes: " + item.ingredientes;
-            document.getElementById('modalPrice').innerText = item.precio;
-            document.getElementById('itemModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('itemModal').style.display = 'none';
-        }
-
-        // Inicializar
-        renderMenu(menuData);
-    </script>
 </body>
 </html>
